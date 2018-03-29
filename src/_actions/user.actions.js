@@ -5,6 +5,7 @@ import { history } from '../_helpers';
 
 export const userActions = {
     login,
+    loginToogle,
     logout,
     register,
     getAll,
@@ -18,6 +19,32 @@ function login(username, password) {
         userService.login(username, password)
             .then(
                 user => { 
+                    dispatch(success(user));
+                    history.push('/');
+                },
+                error => {
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                }
+            );
+    };
+
+    function request(user) { return { type: userConstants.LOGIN_REQUEST, user } }
+    function success(user) { return { type: userConstants.LOGIN_SUCCESS, user } }
+    function failure(error) { return { type: userConstants.LOGIN_FAILURE, error } }
+}
+
+function loginToogle(username, password) {
+    console.log("in login toogle");
+    return dispatch => {
+        dispatch(request({ username }));
+        console.log("Request dispatched done");
+
+        userService.loginT(username, password)
+            .then(
+                
+                user => { 
+                    console.log("Username from request ==>" + user);
                     dispatch(success(user));
                     history.push('/');
                 },
